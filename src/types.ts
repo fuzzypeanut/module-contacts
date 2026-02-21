@@ -1,16 +1,14 @@
-export interface FPModule {
-	mount(target: HTMLElement, props?: Record<string, unknown>): unknown;
-	unmount(instance: unknown): void;
-}
+// Re-export FPModule from the SDK — no local redefinition.
+export type { FPModule } from '@fuzzypeanut/sdk';
 
 export interface ContactEmail {
 	value: string;
-	label?: string; // 'work' | 'personal' | etc.
+	label?: string; // 'work' | 'personal' | 'other' | etc.
 }
 
 export interface ContactPhone {
 	value: string;
-	label?: string;
+	label?: string; // 'work' | 'mobile' | 'home' | 'other' | etc.
 }
 
 export interface Contact {
@@ -53,4 +51,14 @@ export interface TimelineEntry {
 	title: string;
 	preview?: string;
 	author?: string;
+}
+
+export interface ContactNote {
+	id: string;
+	contactId: string;
+	authorId: string;
+	authorName: string;
+	body: string;
+	createdAt: string;
+	updatedAt: string;
 }

@@ -32,15 +32,19 @@
 			view = 'list';
 		});
 
-		// Handle contacts:get event (return contact by email)
+		// Handle contacts:get — look up by email, respond via returnEvent or contacts:found
 		sdk.events.on('contacts:get', async (payload) => {
 			const p = payload as { email?: string; returnEvent?: string };
-			if (!p?.email || !p?.returnEvent) return;
+			if (!p?.email) return;
+			const returnEvent = p?.returnEvent ?? 'contacts:found';
 			try {
 				const contact = await contactsApi.getByEmail(p.email);
-				sdk.events.emit(p.returnEvent, { contact });
+				const ref = contact
+					? { id: contact.id, displayName: contact.displayName, email: contact.emails[0]?.value }
+					: null;
+				sdk.events.emit(returnEvent, { contact: ref });
 			} catch {
-				sdk.events.emit(p.returnEvent, { contact: null });
+				sdk.events.emit(returnEvent, { contact: null });
 			}
 		});
 	});
@@ -80,7 +84,9 @@
 
 	function selectContact(contact: Contact) {
 		if (pickMode) {
-			getSDK().events.emit(pickReturnEvent, { contacts: [contact] });
+			// contacts:picked payload is ContactRef[], not full Contact
+			const ref = { id: contact.id, displayName: contact.displayName, email: contact.emails[0]?.value };
+			getSDK().events.emit(pickReturnEvent, { contacts: [ref] });
 			pickMode = false;
 			pickReturnEvent = '';
 			return;

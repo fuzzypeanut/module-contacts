@@ -12,5 +12,5 @@
   "scopes": ["contacts:read", "contacts:write"],
   "compose": "docker-compose.yml",
   "provides": ["contacts:pick", "contacts:get"],
-  "consumes": ["mail:get-threads", "calendar:get-events"]
+  "consumes": ["mail:get-threads", "calendar:get-events-for-contact"]
 }

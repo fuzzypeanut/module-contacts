@@ -1,7 +1,7 @@
 import { getSDK } from '@fuzzypeanut/sdk';
 import type { Contact, Organization, TimelineEntry } from './types';
 
-const API_URL = (import.meta as { env: Record<string, string> }).env.VITE_CONTACTS_API ?? 'http://localhost:3300';
+const API_URL = (import.meta as { env: Record<string, string> }).env.VITE_CONTACTS_API ?? 'http://localhost:3003';
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 	const token = await getSDK().auth.getToken();

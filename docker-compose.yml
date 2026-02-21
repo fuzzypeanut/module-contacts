@@ -1,0 +1,36 @@
+services:
+  # Serves the built remoteEntry.js to the shell
+  contacts-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "3002:80"
+    depends_on:
+      - contacts-api
+
+  # Registers this module with the shell registry on startup
+  contacts-registrar:
+    build:
+      context: .
+      dockerfile: Dockerfile.registrar
+    environment:
+      REGISTRY_URL: ${REGISTRY_URL:-http://shell-registry:3100}
+      MODULE_UI_URL: ${MODULE_UI_URL:-http://localhost:3002}
+    depends_on:
+      - contacts-ui
+
+  # Contacts backend — REST + CardDAV
+  contacts-api:
+    image: ghcr.io/fuzzypeanut/contacts-api:latest
+    ports:
+      - "3003:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://contacts:contacts@postgres:5432/contacts}
+      AUTHENTIK_URL: ${AUTHENTIK_URL:-http://authentik-server:9000}
+      JWKS_URL: ${JWKS_URL:-http://authentik-server:9000/application/o/fuzzypeanut-shell/jwks/}
+    volumes:
+      - contacts-data:/data
+
+volumes:
+  contacts-data:

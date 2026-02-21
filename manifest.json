@@ -1,0 +1,16 @@
+{
+  "id": "fuzzypeanut-contacts",
+  "displayName": "Contacts",
+  "version": "0.1.0",
+  "remoteEntry": "/remoteEntry.js",
+  "routes": ["/contacts"],
+  "nav": {
+    "label": "Contacts",
+    "icon": "👥",
+    "order": 4
+  },
+  "scopes": ["contacts:read", "contacts:write"],
+  "compose": "docker-compose.yml",
+  "provides": ["contacts:pick", "contacts:get"],
+  "consumes": ["mail:get-threads", "calendar:get-events"]
+}
